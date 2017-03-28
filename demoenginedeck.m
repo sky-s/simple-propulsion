@@ -35,17 +35,17 @@ function [Tavail,TSFC,fuelFlow,etaProp,eCoreTotal,eCore] = ...
 % 
 %   See also ACTUATORDISC, CALCULATEPSFC,
 %     POWERLAPSE, THROTTLEEFFICIENCY, ALTITUDEEFFICIENCY, 
-%     STDATMO - http://www.mathworks.com/matlabcentral/fileexchange/28135.
+%     ATMOS - http://www.mathworks.com/matlabcentral/fileexchange/28135.
 
 %   Copyright 2013 Sky Sartorius
 %   Author contact: mathworks.com/matlabcentral/fileexchange/authors/101715
 
 % Default assumptions 
 if nargin < 5 || isempty(assumptions)
-    assumptions.etaDisc                 = .92;
+    assumptions.etaDisc                 = 0.92;
     assumptions.Q                       = 43e6; %J/kg Jet A fuel
     % assumptions.Q                       = 120e6; %MJ/kg liquid hydrogen
-    assumptions.efficiencyAtSeaLevel    = .846;
+    assumptions.efficiencyAtSeaLevel    = 0.846;
     assumptions.hMaxEfficiency          = 11277.6; % meters (37000 ft)
     assumptions.efficiencies            = ...
         {.4,@throttleefficiency,@altitudeefficiency};
@@ -53,7 +53,7 @@ if nargin < 5 || isempty(assumptions)
 end
 
 % Flight conditions
-[rho,a] = atmos(h);
+[rho,a] = atmosphere(h);
 V = M.*a;
 
 % Step 1: Find available thrust
@@ -84,25 +84,17 @@ TSFC = fuelFlow./Treq;
 
 end
 
-function [rho,a] = atmos(h)
-if exist('stdatmo','file') >= 2
-    [rho,a] = stdatmo(h);
+function [rho,a] = atmosphere(h)
+if exist('atmos','file') >= 2
+    [rho,a] = atmos(h);
 elseif exist('atmosisa','file') >= 2
     [T,~,~,rho] = atmosisa(h);
     a = sqrt(1.4*287.05287*T);
 else
     link = 'http://www.mathworks.com/matlabcentral/fileexchange/28135';
-    a='Standard atmosphere model on MATLAB path required';
-    b=['<a href="' link '">STDATMO on file exchange</a>'];
-    c=['<a href="' link '?download=true">STDATMO direct download</a>'];
+    a='POWERLAPSE requires a standard atmosphere model on the MATLAB path';
+    b=['<a href="' link '">Standard atmosphere on MatlabCentral</a>'];
+    c=['<a href="' link '?download=true">Direct download</a>'];
     error('%s.\n%s\n%s',a,b,c)
 end
 end
-
-% Revision History
-%{
-2013-03-11 uploaded to file exchange along with associated functions
-2013-05-07 help block updates
-2013-05-07 uploaded to FEX
-2013-07-15 uploaded to FEX
-%}

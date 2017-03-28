@@ -1,10 +1,12 @@
-function eThrottle = throttleefficiency(h,M,throttle,assumptions)
+function eThrottle = throttleefficiency(~,~,throttle,~)
 % Change in gas turbine efficiency as a function of throttle setting. Note
 % that for this function throttle is shaft Preq/Pavail, NOT Treq/Tavail.
 % 
 %   relativeEfficiency = throttleefficiency(h,M,throttle,assumptions)
 % 
 %   See also CALCULATEPSFC.
+
+validateattributes(throttle,{'numeric'},{'nonnegative','<=',1});
 
 %% Interpolation method
 %{

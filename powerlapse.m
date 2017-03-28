@@ -1,31 +1,33 @@
-function [lapse,compressionBenefit] = powerlapse(h,M,assumptions)
-% POWERLAPSE determines the amount of power available from a gas turbine
-% engine as a function of flight altitude and Mach number.
+function [lapse,compressionBenefit] = powerlapse(h,M,~)
+% POWERLAPSE determines the amount of power available from a gas turbine engine
+% as a function of flight altitude and Mach number.
 % 
 %   lapse = POWERLAPSE(h,M,assumptions)
 % 
-%   lapse:       Ratio of available power to available power under sea
-%                level static conditions, Pavail/Psls
-%   h:           Altitude in meters
-%   M:        	 Mach number
+%   lapse:       Ratio of available power to available power under sea level
+%                static conditions, Pavail/Psls.
+%   h:           Altitude in meters or DimVar.
+%   M:        	 Mach number.
 %   assumptions: Unused placeholder input; a stuct whose fields contain 
-%                assumptions for analysis
+%                assumptions for analysis.
 % 
 %   POWERLAPSE requires a standard atmosphere model on the MATLAB path.
 % 
 %   See also DEMOENGINEDECK,
-%    STDATMO - http://www.mathworks.com/matlabcentral/fileexchange/28135.s
-
-if exist('stdatmo','file') >= 2
-    sigma = stdatmo(h)/1.22500;
+%    ATMOS - http://www.mathworks.com/matlabcentral/fileexchange/28135
+        
+% Find density ratio.
+if exist('atmos','file') >= 2
+    sigma = atmos(h)./atmos(0*h);
 elseif exist('atmosisa','file') >= 2
     [~,~,~,rho] = atmosisa(h);
-    sigma = rho/1.22500;
+    [~,~,~,rho0] = atmosisa(0*h);
+    sigma = rho./rho0;
 else
     link = 'http://www.mathworks.com/matlabcentral/fileexchange/28135';
     a='POWERLAPSE requires a standard atmosphere model on the MATLAB path';
-    b=['<a href="' link '">STDATMO on MatlabCentral</a>'];
-    c=['<a href="' link '?download=true">STDATMO direct download</a>'];
+    b=['<a href="' link '">Standard atmosphere on MatlabCentral</a>'];
+    c=['<a href="' link '?download=true">Direct download</a>'];
     error('%s.\n%s\n%s',a,b,c)
 end
 
