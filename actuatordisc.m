@@ -75,5 +75,5 @@ end
 
 function Vi = Vinduced(T,rho,A,V)
 ViStatic = sqrt(T./(2*rho.*A));
-Vi = -V/2+ViStatic.*sqrt((V./(2*ViStatic)).^2+1);
+Vi = -V/2+sqrt((V/2).^2+ViStatic.^2);
 end
