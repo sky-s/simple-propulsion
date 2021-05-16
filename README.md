@@ -1,4 +1,5 @@
-# simple-propulsion
+# Simple propulsion performance estimation
+
 Tools for simple estimation of aircraft propulsion performance.
 
 [![View Simple propulsion performance estimation on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/40740)
