@@ -76,7 +76,9 @@ switch lower(assumptions.engineType)
         % For turbo-normalized engines, maintain sea level power up to critical altitude
         % Above critical altitude, behaves like normally aspirated
         if isa(h,'DimVar')
-            criticalDelta = atmos(assumptions.criticalAltitude)./atmos(0*assumptions.criticalAltitude);
+            [~,~,Pcrit] = atmos(assumptions.criticalAltitude);
+            [~,~,P0] = atmos(0*assumptions.criticalAltitude);
+            criticalDelta = Pcrit./P0;
         else
             if exist('atmos','file') >= 2
                 [~,~,Pcrit] = atmos(assumptions.criticalAltitude);
@@ -88,9 +90,6 @@ switch lower(assumptions.engineType)
                 criticalDelta = Pcrit./P0;
             end
         end
-        
-        % Apply ram recovery to critical altitude pressure ratio
-        criticalDelta = criticalDelta * ramPressureRatio;
         
         % Manifold pressure limited by turbocharger capability
         manifoldPressure = min(1.0, delta ./ criticalDelta);
